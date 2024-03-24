@@ -1,0 +1,4 @@
+[submodule "src/vasp"]
+	path = src/vasp
+	url = git@github.com:jeremyHua1931/vasp.git
+	branch = main
