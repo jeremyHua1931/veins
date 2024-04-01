@@ -12,6 +12,10 @@ doc/neddoc
 
 /out
 
+.csettings
+.cproject
+.settings
+
 examples/**/results
 examples/**/.tkenvrc
 examples/**/.qtenvrc
