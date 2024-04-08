@@ -22,39 +22,39 @@
 
 package org.car2x.veins.nodes;
 
-import org.car2x.veins.base.modules.*;
-import org.car2x.veins.modules.nic.Nic80211p;
+import org.car2x.veins.base.modules.*; // 导入Veins基础模块
+import org.car2x.veins.modules.nic.Nic80211p; // 导入802.11p网络接口模块
 
+// Car（车辆）模块定义
 module Car
 {
-    parameters:
-        string applType; //type of the application layer
-        string nicType = default("Nic80211p"); // type of network interface card
-        string veinsmobilityType = default("org.car2x.veins.modules.mobility.traci.TraCIMobility"); //type of the mobility module
-    gates:
-        input veinsradioIn; // gate for sendDirect
-    submodules:
-        appl: <applType> like org.car2x.veins.base.modules.IBaseApplLayer {
-            parameters:
-                @display("p=60,50");
+    parameters: // 参数定义
+        string applType; // 应用层类型参数，指定应用层模块的类型
+        string nicType = default("Nic80211p"); // 网络接口卡类型参数，默认为802.11p
+        string veinsmobilityType = default("org.car2x.veins.modules.mobility.traci.TraCIMobility"); // 移动性模块类型参数，默认为TraCIMobility
+    gates: // 门定义
+        input veinsradioIn; // 用于sendDirect的输入门
+    submodules: // 子模块定义
+        appl: <applType> like org.car2x.veins.base.modules.IBaseApplLayer { // 应用层模块定义
+            parameters: // 参数定义
+                @display("p=60,50"); // 在仿真界面中显示位置
         }
 
-        nic: <nicType> like org.car2x.veins.modules.nic.INic80211p {
-            parameters:
-                @display("p=60,166");
+        nic: <nicType> like org.car2x.veins.modules.nic.INic80211p { // 网络接口卡模块定义
+            parameters: // 参数定义
+                @display("p=60,166"); // 在仿真界面中显示位置
         }
 
-        veinsmobility: <veinsmobilityType> like org.car2x.veins.base.modules.IMobility {
-            parameters:
-                @display("p=130,172;i=block/cogwheel");
+        veinsmobility: <veinsmobilityType> like org.car2x.veins.base.modules.IMobility { // 移动性模块定义
+            parameters: // 参数定义
+                @display("p=130,172;i=block/cogwheel"); // 在仿真界面中显示位置和图标
         }
         
-    connections:
-        nic.upperLayerOut --> appl.lowerLayerIn;
-        nic.upperLayerIn <-- appl.lowerLayerOut;
-        nic.upperControlOut --> appl.lowerControlIn;
-        nic.upperControlIn <-- appl.lowerControlOut;
+    connections: // 连接定义
+        nic.upperLayerOut --> appl.lowerLayerIn; // 连接网络接口卡的上层输出到应用层的下层输入
+        nic.upperLayerIn <-- appl.lowerLayerOut; // 连接网络接口卡的上层输入到应用层的下层输出
+        nic.upperControlOut --> appl.lowerControlIn; // 连接网络接口卡的上层控制输出到应用层的下层控制输入
+        nic.upperControlIn <-- appl.lowerControlOut; // 连接网络接口卡的上层控制输入到应用层的下层控制输出
 
-        veinsradioIn --> nic.radioIn;
-
+        veinsradioIn --> nic.radioIn; // 连接输入门到网络接口卡的radioIn输入门，用于sendDirect操作
 }

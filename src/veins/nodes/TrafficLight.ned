@@ -21,49 +21,51 @@
 //
 package org.car2x.veins.nodes;
 
-import org.car2x.veins.base.modules.*;
-import org.car2x.veins.modules.nic.Nic80211p;
-import org.car2x.veins.modules.world.traci.trafficLight.TraCITrafficLightInterface;
+import org.car2x.veins.base.modules.*; // 导入Veins基础模块
+import org.car2x.veins.modules.nic.Nic80211p; // 导入802.11p网络接口模块
+import org.car2x.veins.modules.world.traci.trafficLight.TraCITrafficLightInterface; // 导入TraCITrafficLightInterface模块
+
+// TrafficLight（交通灯）模块定义
 module TrafficLight
 {
-    parameters:
-        string logicType;
-        string applType; //type of the application layer
-        string nicType = default("Nic80211p"); // type of network interface card
-        string externalId; // TraCI server's id of the junction/tls managed by this module
-    gates:
-        input veinsradioIn; // gate for sendDirect
-    submodules:
-        appl: <applType> like org.car2x.veins.base.modules.ITrafficLightApplLayer {
-            parameters:
-                @display("p=60,50");
+    parameters: // 参数定义
+        string logicType; // 逻辑类型参数
+        string applType; // 应用层类型参数，指定应用层模块的类型
+        string nicType = default("Nic80211p"); // 网络接口卡类型参数，默认为802.11p
+        string externalId; // 交通灯管理的TraCI服务器id
+    gates: // 门定义
+        input veinsradioIn; // 用于sendDirect的输入门
+    submodules: // 子模块定义
+        appl: <applType> like org.car2x.veins.base.modules.ITrafficLightApplLayer { // 应用层模块定义
+            parameters: // 参数定义
+                @display("p=60,50"); // 在仿真界面中显示位置
         }
         
-        nic: <nicType> like org.car2x.veins.modules.nic.INic80211p {
-            parameters:
-                @display("p=60,166");
+        nic: <nicType> like org.car2x.veins.modules.nic.INic80211p { // 网络接口卡模块定义
+            parameters: // 参数定义
+                @display("p=60,166"); // 在仿真界面中显示位置
         }
 
-        mobility: BaseMobility {
-            parameters:
-                @display("p=130,172;i=block/cogwheel");
+        mobility: BaseMobility { // 移动性模块定义
+            parameters: // 参数定义
+                @display("p=130,172;i=block/cogwheel"); // 在仿真界面中显示位置和图标
         }
-        tlInterface: TraCITrafficLightInterface {
-            @display("p=200,50");
-        }
-
-        logic: <logicType> like org.car2x.veins.base.modules.ITrafficLightLogic {
-            @display("p=130,50");
+        tlInterface: TraCITrafficLightInterface { // 交通灯TraCI接口模块定义
+            @display("p=200,50"); // 在仿真界面中显示位置
         }
 
-    connections:
-        tlInterface.logic <--> logic.interface;
-        appl.logic <--> logic.applLayer;
+        logic: <logicType> like org.car2x.veins.base.modules.ITrafficLightLogic { // 交通灯逻辑模块定义
+            @display("p=130,50"); // 在仿真界面中显示位置
+        }
 
-        nic.upperLayerOut --> appl.lowerLayerIn;
-        nic.upperLayerIn <-- appl.lowerLayerOut;
-        nic.upperControlOut --> appl.lowerControlIn;
-        nic.upperControlIn <-- appl.lowerControlOut;
+    connections: // 连接定义
+        tlInterface.logic <--> logic.interface; // 连接交通灯TraCI接口到逻辑模块的接口
+        appl.logic <--> logic.applLayer; // 连接应用层到逻辑模块的接口
 
-        veinsradioIn --> nic.radioIn;
+        nic.upperLayerOut --> appl.lowerLayerIn; // 连接网络接口卡的上层输出到应用层的下层输入
+        nic.upperLayerIn <-- appl.lowerLayerOut; // 连接网络接口卡的上层输入到应用层的下层输出
+        nic.upperControlOut --> appl.lowerControlIn; // 连接网络接口卡的上层控制输出到应用层的下层控制输入
+        nic.upperControlIn <-- appl.lowerControlOut; // 连接网络接口卡的上层控制输入到应用层的下层控制输出
+
+        veinsradioIn --> nic.radioIn; // 连接输入门到网络接口卡的radioIn输入门，用于sendDirect操作
 }

@@ -27,4 +27,6 @@
 // See the Veins website <a href="http://veins.car2x.org/"> for a tutorial, documentation, and publications </a>.
 //
 
+// 包声明，指定代码所属的包名为 org.car2x.veins
 package org.car2x.veins;
+

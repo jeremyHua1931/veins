@@ -22,49 +22,48 @@
 
 package org.car2x.veins.nodes;
 
-import org.car2x.veins.base.connectionManager.ConnectionManager;
-import org.car2x.veins.base.modules.BaseWorldUtility;
-import org.car2x.veins.modules.mobility.traci.TraCIScenarioManager*;
-import org.car2x.veins.modules.obstacle.ObstacleControl;
-import org.car2x.veins.modules.world.annotations.AnnotationManager;
-import org.car2x.veins.nodes.Car;
-import org.car2x.veins.visualizer.roads.RoadsCanvasVisualizer;
+import org.car2x.veins.base.connectionManager.ConnectionManager; // 导入连接管理器
+import org.car2x.veins.base.modules.BaseWorldUtility; // 导入基础世界工具模块
+import org.car2x.veins.modules.mobility.traci.TraCIScenarioManager*; // 导入TraCI场景管理器
+import org.car2x.veins.modules.obstacle.ObstacleControl; // 导入障碍控制模块
+import org.car2x.veins.modules.world.annotations.AnnotationManager; // 导入注解管理器
+import org.car2x.veins.nodes.Car; // 导入Car节点
+import org.car2x.veins.visualizer.roads.RoadsCanvasVisualizer; // 导入道路画布可视化器
 
-network Scenario
+network Scenario // 场景网络定义
 {
-    parameters:
-        double playgroundSizeX @unit(m); // x size of the area the nodes are in (in meters)
-        double playgroundSizeY @unit(m); // y size of the area the nodes are in (in meters)
-        double playgroundSizeZ @unit(m); // z size of the area the nodes are in (in meters)
-        @display("bgb=$playgroundSizeX,$playgroundSizeY");
-    submodules:
-        obstacles: ObstacleControl {
-            @display("p=240,50");
+    parameters: // 参数定义
+        double playgroundSizeX @unit(m); // 播放区域的X尺寸（单位：米）
+        double playgroundSizeY @unit(m); // 播放区域的Y尺寸（单位：米）
+        double playgroundSizeZ @unit(m); // 播放区域的Z尺寸（单位：米）
+        @display("bgb=$playgroundSizeX,$playgroundSizeY"); // 在仿真界面中显示播放区域的大小
+    submodules: // 子模块定义
+        obstacles: ObstacleControl { // 障碍物控制器
+            @display("p=240,50"); // 在仿真界面中显示位置
         }
-        annotations: AnnotationManager {
-            @display("p=260,50");
+        annotations: AnnotationManager { // 注解管理器
+            @display("p=260,50"); // 在仿真界面中显示位置
         }
-        connectionManager: ConnectionManager {
-            parameters:
-                @display("p=150,0;i=abstract/multicast");
+        connectionManager: ConnectionManager { // 连接管理器
+            parameters: // 参数定义
+                @display("p=150,0;i=abstract/multicast"); // 在仿真界面中显示位置和图标
         }
-        world: BaseWorldUtility {
-            parameters:
-                playgroundSizeX = veins_eval_by_version(veins_omnetpp_buildnum(), "playgroundSizeX", 1525, "parent.playgroundSizeX");
-                playgroundSizeY = veins_eval_by_version(veins_omnetpp_buildnum(), "playgroundSizeY", 1525, "parent.playgroundSizeY");
-                playgroundSizeZ = veins_eval_by_version(veins_omnetpp_buildnum(), "playgroundSizeZ", 1525, "parent.playgroundSizeZ");
-                @display("p=30,0;i=misc/globe");
+        world: BaseWorldUtility { // 基础世界工具模块
+            parameters: // 参数定义
+                playgroundSizeX = veins_eval_by_version(veins_omnetpp_buildnum(), "playgroundSizeX", 1525, "parent.playgroundSizeX"); // 设置播放区域的X尺寸
+                playgroundSizeY = veins_eval_by_version(veins_omnetpp_buildnum(), "playgroundSizeY", 1525, "parent.playgroundSizeY"); // 设置播放区域的Y尺寸
+                playgroundSizeZ = veins_eval_by_version(veins_omnetpp_buildnum(), "playgroundSizeZ", 1525, "parent.playgroundSizeZ"); // 设置播放区域的Z尺寸
+                @display("p=30,0;i=misc/globe"); // 在仿真界面中显示位置和图标
         }
-        manager: TraCIScenarioManagerLaunchd {
-            parameters:
-                @display("p=512,128");
+        manager: TraCIScenarioManagerLaunchd { // TraCI场景管理器
+            parameters: // 参数定义
+                @display("p=512,128"); // 在仿真界面中显示位置
         }
-        roadsCanvasVisualizer: RoadsCanvasVisualizer {
-            @display("p=300,0");
+        roadsCanvasVisualizer: RoadsCanvasVisualizer { // 道路画布可视化器
+            @display("p=300,0"); // 在仿真界面中显示位置
         }
-        node[0]: Car {
+        node[0]: Car { // Car节点
         }
 
-    connections allowunconnected:
+    connections allowunconnected: // 允许未连接的连接
 }
-
