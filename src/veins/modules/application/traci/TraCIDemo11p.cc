@@ -30,6 +30,7 @@ Define_Module(veins::TraCIDemo11p);
 
 void TraCIDemo11p::initialize(int stage)
 {
+    // 初始化函数
     DemoBaseApplLayer::initialize(stage);
     if (stage == 0) {
         sentMessage = false;
@@ -52,6 +53,7 @@ void TraCIDemo11p::onWSA(DemoServiceAdvertisment* wsa)
 
 void TraCIDemo11p::onWSM(BaseFrame1609_4* frame)
 {
+    // 处理消息
     TraCIDemo11pMessage* wsm = check_and_cast<TraCIDemo11pMessage*>(frame);
 
     findHost()->getDisplayString().setTagArg("i", 1, "green");
@@ -59,7 +61,7 @@ void TraCIDemo11p::onWSM(BaseFrame1609_4* frame)
     if (mobility->getRoadId()[0] != ':') traciVehicle->changeRoute(wsm->getDemoData(), 9999);
     if (!sentMessage) {
         sentMessage = true;
-        // repeat the received traffic update once in 2 seconds plus some random delay
+        // 在2秒后加上一些随机延迟，重复发送接收到的交通更新
         wsm->setSenderAddress(myId);
         wsm->setSerial(3);
         scheduleAt(simTime() + 2 + uniform(0.01, 0.2), wsm->dup());
@@ -101,14 +103,14 @@ void TraCIDemo11p::handlePositionUpdate(cObject* obj)
             populateWSM(wsm);
             wsm->setDemoData(mobility->getRoadId().c_str());
 
-            // host is standing still due to crash
+            // 由于碰撞，主机静止不动
             if (dataOnSch) {
                 startService(Channel::sch2, 42, "Traffic Information Service");
-                // started service and server advertising, schedule message to self to send later
+                // 启动服务和服务器广告，计划自己发送消息
                 scheduleAt(computeAsynchronousSendingTime(1, ChannelType::service), wsm);
             }
             else {
-                // send right away on CCH, because channel switching is disabled
+                // 因为禁用了通道切换，所以立即发送到CCH
                 sendDown(wsm);
             }
         }
